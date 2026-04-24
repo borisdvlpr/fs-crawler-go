@@ -1,15 +1,15 @@
 package cmd
 
 import (
-	"github.com/borisdvlpr/fs-crawler-go/internal/file"
+	"os"
 )
 
 func Run() error {
-	if err := file.CreateDir("output"); err != nil {
+	if err := os.MkdirAll("output", os.ModePerm); err != nil {
 		return err
 	}
 
-	if err := file.CreateDir("logs"); err != nil {
+	if err := os.MkdirAll("logs", os.ModePerm); err != nil {
 		return err
 	}
 
