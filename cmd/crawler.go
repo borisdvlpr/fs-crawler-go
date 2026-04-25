@@ -28,7 +28,7 @@ func Run() error {
 	}
 
 	paths := strings.Split(string(fileData), ";")
-	if len(paths) == 0 {
+	if paths[0] == "" {
 		return fmt.Errorf("paths file is empty")
 	}
 
