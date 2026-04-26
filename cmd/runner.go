@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"strings"
 
@@ -26,6 +27,8 @@ func Run() error {
 	if err != nil {
 		return err
 	}
+
+	slog.Info("file successfully read")
 
 	paths := strings.Split(string(fileData), ";")
 	if paths[0] == "" {
