@@ -4,13 +4,13 @@ import (
 	"log/slog"
 	"os"
 
-	crawler "github.com/borisdvlpr/fs-crawler-go/cmd"
+	runner "github.com/borisdvlpr/fs-crawler-go/cmd"
 )
 
 func main() {
 	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, nil)))
 
-	if err := crawler.Run(); err != nil {
+	if err := runner.Run(); err != nil {
 		slog.Error("application exited with error", "error", err)
 		os.Exit(1)
 	}
