@@ -31,7 +31,15 @@ func Run() error {
 	slog.Info("file successfully read")
 
 	paths := strings.Split(string(fileData), ";")
-	if paths[0] == "" {
+
+	var validPaths []string
+	for _, p := range paths {
+		if p = strings.TrimSpace(p); p != "" {
+			validPaths = append(validPaths, p)
+		}
+	}
+
+	if len(validPaths) == 0 {
 		return fmt.Errorf("paths file is empty")
 	}
 
