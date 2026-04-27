@@ -35,6 +35,23 @@ func ReadFile(filePath string) ([]byte, error) {
 	return data, nil
 }
 
+func StartCrawler(folderPath string) {
+	slog.Info("Crawling", "path", folderPath)
+
+	fileList := &FilesList{Files: []FileEntry{}}
+
+	if err := readFolder(folderPath, fileList); err != nil {
+		slog.Error("Error reading folder", "path", folderPath, "err", err)
+		return
+	}
+
+	slog.Info("Folder read", "path", folderPath, "files", len(fileList.Files))
+
+	if err := saveOutput(fileList); err != nil {
+		slog.Error("Error saving output", "path", folderPath, "err", err)
+	}
+}
+
 func readFolder(folderPath string, fileList *FilesList) error {
 	entries, err := os.ReadDir(folderPath)
 	if err != nil {
