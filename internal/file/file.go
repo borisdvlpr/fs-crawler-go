@@ -1,11 +1,13 @@
 package file
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log/slog"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 type FileEntry struct {
@@ -60,6 +62,23 @@ func readFolder(folderPath string, fileList *FilesList) error {
 			Size: info.Size(),
 			LMod: info.ModTime().Unix(),
 		})
+	}
+
+	return nil
+}
+
+func saveOutput(fileList *FilesList) error {
+	jsonData, err := json.MarshalIndent(fileList, "", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to marshal output: %w", err)
+	}
+
+	timestamp := time.Now().UnixMicro()
+	outputPath := fmt.Sprintf("./output/%d_output.json", timestamp)
+	slog.Info("Saving file", "path", outputPath)
+
+	if err := os.WriteFile(outputPath, jsonData, 0o444); err != nil {
+		return fmt.Errorf("failed to write output file %s: %w", outputPath, err)
 	}
 
 	return nil
