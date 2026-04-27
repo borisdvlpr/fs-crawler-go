@@ -7,7 +7,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/borisdvlpr/fs-crawler-go/internal/crawler"
 	"github.com/borisdvlpr/fs-crawler-go/internal/file"
 	"github.com/borisdvlpr/fs-crawler-go/internal/log"
 )
