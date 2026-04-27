@@ -5,7 +5,9 @@ import (
 	"log/slog"
 	"os"
 	"strings"
+	"sync"
 
+	"github.com/borisdvlpr/fs-crawler-go/internal/crawler"
 	"github.com/borisdvlpr/fs-crawler-go/internal/file"
 	"github.com/borisdvlpr/fs-crawler-go/internal/log"
 )
@@ -30,7 +32,8 @@ func Run() error {
 
 	slog.Info("file successfully read")
 
-	paths := strings.Split(string(fileData), ";")
+	raw := strings.TrimSpace(string(fileData))
+	paths := strings.Split(raw, ";")
 
 	var validPaths []string
 	for _, p := range paths {
@@ -42,6 +45,29 @@ func Run() error {
 	if len(validPaths) == 0 {
 		return fmt.Errorf("paths file is empty")
 	}
+
+	slog.Info("starting crawl", "path_count", len(paths))
+
+	var wg sync.WaitGroup
+
+	for _, path := range paths {
+		wg.Add(1)
+
+		go func(p string) {
+			defer wg.Done()
+			defer func() {
+				if r := recover(); r != nil {
+					slog.Error("crawler panicked", "path", p, "err", r)
+				}
+			}()
+
+			crawler.StartCrawler(p)
+		}(path)
+	}
+
+	wg.Wait()
+
+	slog.Info("crawl finished", "paths_processed", len(paths))
 
 	return nil
 }
