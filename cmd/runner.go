@@ -60,7 +60,7 @@ func Run() error {
 				}
 			}()
 
-			crawler.StartCrawler(p)
+			file.StartCrawler(p)
 		}(path)
 	}
 
