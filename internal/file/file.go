@@ -25,7 +25,12 @@ func ReadFile(filePath string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to open file: %w", err)
 	}
-	defer file.Close()
+
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil && err == nil {
+			err = fmt.Errorf("failed to close file: %s", closeErr)
+		}
+	}()
 
 	data, err := io.ReadAll(file)
 	if err != nil {
