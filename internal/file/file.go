@@ -10,14 +10,14 @@ import (
 	"time"
 )
 
-type FileEntry struct {
+type Entry struct {
 	Path string `json:"path"`
 	Size int64  `json:"size"`
 	LMod int64  `json:"lmod"`
 }
 
 type FilesList struct {
-	Files []FileEntry `json:"files"`
+	Files []Entry `json:"files"`
 }
 
 func ReadFile(filePath string) ([]byte, error) {
@@ -38,7 +38,7 @@ func ReadFile(filePath string) ([]byte, error) {
 func StartCrawler(folderPath string) {
 	slog.Info("Crawling", "path", folderPath)
 
-	fileList := &FilesList{Files: []FileEntry{}}
+	fileList := &FilesList{Files: []Entry{}}
 
 	if err := readFolder(folderPath, fileList); err != nil {
 		slog.Error("Error reading folder", "path", folderPath, "err", err)
@@ -74,7 +74,7 @@ func readFolder(folderPath string, fileList *FilesList) error {
 			continue
 		}
 
-		fileList.Files = append(fileList.Files, FileEntry{
+		fileList.Files = append(fileList.Files, Entry{
 			Path: fullPath,
 			Size: info.Size(),
 			LMod: info.ModTime().Unix(),
