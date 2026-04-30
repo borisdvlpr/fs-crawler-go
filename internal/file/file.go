@@ -40,21 +40,22 @@ func ReadFile(filePath string) ([]byte, error) {
 	return data, nil
 }
 
-func StartCrawler(folderPath string) {
+func StartCrawler(folderPath string) error {
 	slog.Info("Crawling", "path", folderPath)
 
 	fileList := &FilesList{Files: []Entry{}}
 
 	if err := readFolder(folderPath, fileList); err != nil {
-		slog.Error("Error reading folder", "path", folderPath, "err", err)
-		return
+		return fmt.Errorf("error reading file: %w", err)
 	}
 
 	slog.Info("Folder read", "path", folderPath, "files", len(fileList.Files))
 
 	if err := saveOutput(fileList); err != nil {
-		slog.Error("Error saving output", "path", folderPath, "err", err)
+		return fmt.Errorf("error saving output: %w", err)
 	}
+
+	return nil
 }
 
 func readFolder(folderPath string, fileList *FilesList) error {
